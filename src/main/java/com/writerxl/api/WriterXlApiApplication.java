@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WriterxlApiApplication {
+public class WriterXlApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WriterxlApiApplication.class, args);
+        SpringApplication.run(WriterXlApiApplication.class, args);
     }
 
 }

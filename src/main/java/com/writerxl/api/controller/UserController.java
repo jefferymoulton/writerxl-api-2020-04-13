@@ -51,8 +51,7 @@ public class UserController {
             return userService.getUserByEmail(email);
         }
         catch (UserNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Unable to find user with email address: " + email);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user with email address: " + email);
         }
     }
 

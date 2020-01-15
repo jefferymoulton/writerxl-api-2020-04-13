@@ -11,6 +11,6 @@ public interface JpaUserRepository extends CrudRepository<JpaUser, Integer> {
 
     Optional<JpaUser> findOneByUserKey(final String userKey);
 
-    Optional<JpaUser> findOneByEmailAddress(final String emailAddress);
+    Optional<JpaUser> findOneByEmail(final String email);
 
 }

@@ -1,11 +1,6 @@
 package com.writerxl.api.exception;
 
-public class UserNotFoundException extends RuntimeException {
-
-    public UserNotFoundException() {
-        super();
-    }
-
+public class UserNotFoundException extends WriterXLException {
     public UserNotFoundException(String message) {
         super(message);
     }

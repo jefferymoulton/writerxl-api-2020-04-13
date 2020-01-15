@@ -18,7 +18,7 @@ public class JpaUser {
     private String userKey;
 
     @Column(unique = true, nullable = false)
-    private String emailAddress;
+    private String email;
 
     @Column(nullable = false)
     private String firstName;

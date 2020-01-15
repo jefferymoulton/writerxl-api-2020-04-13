@@ -23,30 +23,39 @@ public class JpaUserService implements UserService {
     }
 
     @Override
-    public User getUserByUserKey(String userKey) {
-        Optional<JpaUser> user = userRepository.findOneByUserKey(userKey);
-        return JpaUserMapper.MAPPER.map(user.orElseThrow(UserNotFoundException::new));
+    public User getUserByUserKey(String userKey) throws UserNotFoundException {
+        return JpaUserMapper.MAPPER.map(findUserByUserKey(userKey).orElseThrow(
+                () -> new UserNotFoundException("Unable to find user with the specified key.")
+        ));
     }
 
     @Override
-    public User getUserByEmailAddress(String emailAddress) {
-        Optional<JpaUser> user = userRepository.findOneByEmailAddress(emailAddress);
-        return JpaUserMapper.MAPPER.map(user.orElseThrow(UserNotFoundException::new));
+    public User getUserByEmail(String email) throws UserNotFoundException {
+        return JpaUserMapper.MAPPER.map(findUserByEmail(email).orElseThrow(
+                () -> new UserNotFoundException("Unable to find user with the specified email address.")
+        ));
     }
 
     @Override
-    public User createUser(User user) {
-        try {
-            if (getUserByEmailAddress(user.getEmailAddress()) != null) {
-                throw new UserAlreadyExistsException();
-            }
-        } catch (UserNotFoundException ignored) {
-            // Do nothing
+    public User createUser(User user) throws UserAlreadyExistsException {
+        if (findUserByEmail(user.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with that email address already exists.");
+        }
+        else if (findUserByUserKey(user.getUserKey()).isPresent()) {
+            throw new UserAlreadyExistsException("User with that key already exists.");
         }
 
         JpaUser saveUser = JpaUserMapper.MAPPER.mapDb(user);
 
         return JpaUserMapper.MAPPER.map(userRepository.save(saveUser));
+    }
+
+    private Optional<JpaUser> findUserByUserKey(String userKey) {
+        return userRepository.findOneByUserKey(userKey);
+    }
+
+    private Optional<JpaUser> findUserByEmail(String email) {
+        return userRepository.findOneByEmail(email);
     }
 
 }

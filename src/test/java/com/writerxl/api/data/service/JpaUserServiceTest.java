@@ -46,41 +46,45 @@ public class JpaUserServiceTest {
     public void whenGetByValidUserKey_thenReturnValidUser() {
         when(mockRepository.findOneByUserKey(validUser.getUserKey())).thenReturn(Optional.ofNullable(validUser));
 
-        User returnedUser = userService.getUserByUserKey(validUser.getUserKey());
-
-        assertEquals(validUser.getUserKey(), returnedUser.getUserKey());
-        assertEquals(validUser.getEmailAddress(), returnedUser.getEmailAddress());
-        assertEquals(validUser.getFirstName(), returnedUser.getFirstName());
-        assertEquals(validUser.getLastName(), returnedUser.getLastName());
-        assertEquals(validUser.getStatus(), returnedUser.getStatus());
+        try {
+            User returnedUser = userService.getUserByUserKey(validUser.getUserKey());
+            testValidUser(validUser, returnedUser);
+        }
+        catch (UserNotFoundException ex) {
+            throw new RuntimeException("Unable to retrieve mock user by user key.");
+        }
     }
 
     @Test
     public void whenFindByInvalidUserKey_thenThrowNotFoundException() {
         when(mockRepository.findOneByUserKey(invalidUser.getUserKey())).thenReturn(Optional.empty());
-
         assertThrows(UserNotFoundException.class, () -> userService.getUserByUserKey(invalidUser.getUserKey()));
     }
 
     @Test
     public void whenFindByValidEmail_thenReturnValidUser() {
-        when(mockRepository.findOneByEmailAddress(validUser.getEmailAddress()))
-                .thenReturn(Optional.ofNullable(validUser));
+        when(mockRepository.findOneByEmail(validUser.getEmail())).thenReturn(Optional.ofNullable(validUser));
 
-        User returnedUser = userService.getUserByEmailAddress(validUser.getEmailAddress());
-
-        assertEquals(validUser.getUserKey(), returnedUser.getUserKey());
-        assertEquals(validUser.getEmailAddress(), returnedUser.getEmailAddress());
-        assertEquals(validUser.getFirstName(), returnedUser.getFirstName());
-        assertEquals(validUser.getLastName(), returnedUser.getLastName());
-        assertEquals(validUser.getStatus(), returnedUser.getStatus());
+        try {
+            User returnedUser = userService.getUserByEmail(validUser.getEmail());
+            testValidUser(validUser, returnedUser);
+        }
+        catch(UserNotFoundException ex) {
+            throw new RuntimeException("Unable to retrieve mock user by valid email address.");
+        }
     }
 
     @Test
     public void whenFindByInvalidUserEmail_thenThrowNotFoundException() {
-        when(mockRepository.findOneByEmailAddress(invalidUser.getEmailAddress()))
-                .thenReturn(Optional.empty());
+        when(mockRepository.findOneByEmail(invalidUser.getEmail())).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail(invalidUser.getEmail()));
+    }
 
-        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmailAddress(invalidUser.getEmailAddress()));
+    private void testValidUser(JpaUser validUser, User returnedUser) {
+        assertEquals(validUser.getUserKey(), returnedUser.getUserKey());
+        assertEquals(validUser.getEmail(), returnedUser.getEmail());
+        assertEquals(validUser.getFirstName(), returnedUser.getFirstName());
+        assertEquals(validUser.getLastName(), returnedUser.getLastName());
+        assertEquals(validUser.getStatus(), returnedUser.getStatus());
     }
 }

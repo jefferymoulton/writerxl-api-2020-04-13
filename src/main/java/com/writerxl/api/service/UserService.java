@@ -10,6 +10,6 @@ public interface UserService {
 
     User getUserByEmail(String email) throws UserNotFoundException;
 
-    User createUser(User user) throws UserAlreadyExistsException;
+    User saveUser(User user) throws UserAlreadyExistsException;
 
 }

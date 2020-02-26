@@ -49,7 +49,7 @@ class GroupServiceImplTest {
 
     @Test
     public void whenGetByValidId_thenReturnGroup() {
-        when(groupRepository.findById(VALID_GROUP_ID)).thenReturn(Optional.ofNullable(validGroupEntity));
+        when(groupRepository.findById(VALID_GROUP_ID)).thenReturn(Optional.of(validGroupEntity));
 
         try {
             testValidGroup(groupService.getGroupById(VALID_GROUP_ID));

@@ -49,7 +49,7 @@ class UserEntityServiceTest {
 
     @Test
     public void whenGetByValidKey_thenReturnValidUser() {
-        when(userRepository.findOneByUserKey(VALID_USER_KEY)).thenReturn(Optional.ofNullable(validUser));
+        when(userRepository.findOneByUserKey(VALID_USER_KEY)).thenReturn(Optional.of(validUser));
 
         try {
             User returnedUser = userService.getUserByUserKey(VALID_USER_KEY);
@@ -68,7 +68,7 @@ class UserEntityServiceTest {
 
     @Test
     public void whenFindByValidEmail_thenReturnValidUser() {
-        when(userRepository.findOneByEmail(VALID_USER_EMAIL)).thenReturn(Optional.ofNullable(validUser));
+        when(userRepository.findOneByEmail(VALID_USER_EMAIL)).thenReturn(Optional.of(validUser));
 
         try {
             User returnedUser = userService.getUserByEmail(VALID_USER_EMAIL);

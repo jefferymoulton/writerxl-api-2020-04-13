@@ -2,7 +2,6 @@ package com.writerxl.api.controller;
 
 import com.writerxl.api.exception.UserAlreadyExistsException;
 import com.writerxl.api.exception.UserNotFoundException;
-import com.writerxl.api.exception.WriterXLException;
 import com.writerxl.api.model.User;
 import com.writerxl.api.service.UserService;
 import io.swagger.annotations.*;
@@ -65,7 +64,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody @Valid User user) {
         try {
-            return userService.createUser(user);
+            return userService.saveUser(user);
         }
         catch (UserAlreadyExistsException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);

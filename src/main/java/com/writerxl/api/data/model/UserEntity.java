@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "wxl_users")
-public class JpaUser {
+public class UserEntity {
 
     @Id
     private String userKey;

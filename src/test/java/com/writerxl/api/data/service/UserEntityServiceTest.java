@@ -1,7 +1,7 @@
 package com.writerxl.api.data.service;
 
-import com.writerxl.api.data.model.JpaUser;
-import com.writerxl.api.data.repository.JpaUserRepository;
+import com.writerxl.api.data.model.UserEntity;
+import com.writerxl.api.data.repository.UserRepository;
 import com.writerxl.api.exception.UserNotFoundException;
 import com.writerxl.api.model.User;
 import com.writerxl.api.model.UserStatus;
@@ -18,20 +18,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class JpaUserServiceTest {
+public class UserEntityServiceTest {
 
-    private JpaUserService userService;
+    private UserServiceImpl userService;
 
     @Mock
-    private JpaUserRepository mockRepository;
+    private UserRepository mockRepository;
 
-    private JpaUser validUser = new JpaUser("12345678",
+    private UserEntity validUser = new UserEntity("12345678",
             "good@email.com",
             "Valid",
             "User",
             UserStatus.ACTIVE);
 
-    private JpaUser invalidUser = new JpaUser("XXXXXXXX",
+    private UserEntity invalidUser = new UserEntity("XXXXXXXX",
             "invalid@email.com",
             "Invalid",
             "User",
@@ -39,7 +39,7 @@ public class JpaUserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        userService = new JpaUserService(mockRepository);
+        userService = new UserServiceImpl(mockRepository);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class JpaUserServiceTest {
         assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail(invalidUser.getEmail()));
     }
 
-    private void testValidUser(JpaUser validUser, User returnedUser) {
+    private void testValidUser(UserEntity validUser, User returnedUser) {
         assertEquals(validUser.getUserKey(), returnedUser.getUserKey());
         assertEquals(validUser.getEmail(), returnedUser.getEmail());
         assertEquals(validUser.getFirstName(), returnedUser.getFirstName());

@@ -18,37 +18,42 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserEntityServiceTest {
+class UserEntityServiceTest {
 
     private UserServiceImpl userService;
 
     @Mock
-    private UserRepository mockRepository;
+    private UserRepository userRepository;
 
-    private UserEntity validUser = new UserEntity("12345678",
-            "good@email.com",
-            "Valid",
-            "User",
-            UserStatus.ACTIVE);
+    private static final String VALID_USER_KEY = "12345678";
+    private static final String VALID_USER_EMAIL = "good@email.com";
+    private static final String VALID_USER_FIRST_NAME = "Valid User";
+    private static final String VALID_USER_LAST_NAME = "Valid User";
+    private static final UserStatus VALID_USER_STATUS = UserStatus.ACTIVE;
 
-    private UserEntity invalidUser = new UserEntity("XXXXXXXX",
-            "invalid@email.com",
-            "Invalid",
-            "User",
-            UserStatus.DELETED);
+    private static final String INVALID_USER_KEY = "XXXXXXXX";
+    private static final String INVALID_USER_EMAIL = "invalid@email.com";
+
+    private final UserEntity validUser = new UserEntity(
+            VALID_USER_KEY,
+            VALID_USER_EMAIL,
+            VALID_USER_FIRST_NAME,
+            VALID_USER_LAST_NAME,
+            VALID_USER_STATUS
+    );
 
     @BeforeEach
     public void setUp() {
-        userService = new UserServiceImpl(mockRepository);
+        userService = new UserServiceImpl(userRepository);
     }
 
     @Test
-    public void whenGetByValidUserKey_thenReturnValidUser() {
-        when(mockRepository.findOneByUserKey(validUser.getUserKey())).thenReturn(Optional.ofNullable(validUser));
+    public void whenGetByValidKey_thenReturnValidUser() {
+        when(userRepository.findOneByUserKey(VALID_USER_KEY)).thenReturn(Optional.ofNullable(validUser));
 
         try {
-            User returnedUser = userService.getUserByUserKey(validUser.getUserKey());
-            testValidUser(validUser, returnedUser);
+            User returnedUser = userService.getUserByUserKey(VALID_USER_KEY);
+            testValidUser(returnedUser);
         }
         catch (UserNotFoundException ex) {
             throw new RuntimeException("Unable to retrieve mock user by user key.");
@@ -56,18 +61,18 @@ public class UserEntityServiceTest {
     }
 
     @Test
-    public void whenFindByInvalidUserKey_thenThrowNotFoundException() {
-        when(mockRepository.findOneByUserKey(invalidUser.getUserKey())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> userService.getUserByUserKey(invalidUser.getUserKey()));
+    public void whenGetByInvalidKey_thenThrowNotFoundException() {
+        when(userRepository.findOneByUserKey(INVALID_USER_KEY)).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByUserKey(INVALID_USER_KEY));
     }
 
     @Test
     public void whenFindByValidEmail_thenReturnValidUser() {
-        when(mockRepository.findOneByEmail(validUser.getEmail())).thenReturn(Optional.ofNullable(validUser));
+        when(userRepository.findOneByEmail(VALID_USER_EMAIL)).thenReturn(Optional.ofNullable(validUser));
 
         try {
-            User returnedUser = userService.getUserByEmail(validUser.getEmail());
-            testValidUser(validUser, returnedUser);
+            User returnedUser = userService.getUserByEmail(VALID_USER_EMAIL);
+            testValidUser(returnedUser);
         }
         catch(UserNotFoundException ex) {
             throw new RuntimeException("Unable to retrieve mock user by valid email address.");
@@ -76,15 +81,15 @@ public class UserEntityServiceTest {
 
     @Test
     public void whenFindByInvalidUserEmail_thenThrowNotFoundException() {
-        when(mockRepository.findOneByEmail(invalidUser.getEmail())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail(invalidUser.getEmail()));
+        when(userRepository.findOneByEmail(INVALID_USER_EMAIL)).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail(INVALID_USER_EMAIL));
     }
 
-    private void testValidUser(UserEntity validUser, User returnedUser) {
-        assertEquals(validUser.getUserKey(), returnedUser.getUserKey());
-        assertEquals(validUser.getEmail(), returnedUser.getEmail());
-        assertEquals(validUser.getFirstName(), returnedUser.getFirstName());
-        assertEquals(validUser.getLastName(), returnedUser.getLastName());
-        assertEquals(validUser.getStatus(), returnedUser.getStatus());
+    private void testValidUser(User returnedUser) {
+        assertEquals(VALID_USER_KEY, returnedUser.getUserKey());
+        assertEquals(VALID_USER_EMAIL, returnedUser.getEmail());
+        assertEquals(VALID_USER_FIRST_NAME, returnedUser.getFirstName());
+        assertEquals(VALID_USER_LAST_NAME, returnedUser.getLastName());
+        assertEquals(VALID_USER_STATUS, returnedUser.getStatus());
     }
 }

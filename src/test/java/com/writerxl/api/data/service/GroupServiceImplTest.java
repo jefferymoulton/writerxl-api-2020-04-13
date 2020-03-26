@@ -4,7 +4,6 @@ import com.writerxl.api.data.model.GroupEntity;
 import com.writerxl.api.data.repository.GroupRepository;
 import com.writerxl.api.exception.GroupNotFoundException;
 import com.writerxl.api.model.Group;
-import com.writerxl.api.model.request.GroupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,9 +28,12 @@ class GroupServiceImplTest {
     private static final String VALID_GROUP_NAME = "Valid Group";
     private static final String VALID_GROUP_DESCRIPTION = "This is a valid group";
 
+    private static final String UPDATE_GROUP_NAME = "Updated Group";
+    private static final String UPDATE_GROUP_DESCRIPTION = "updated description";
+
     private static final int INVALID_GROUP_ID = 98765;
 
-    private final GroupRequest validGroupRequest = new GroupRequest(
+    private final Group validGroup = new Group(
             VALID_GROUP_NAME,
             VALID_GROUP_DESCRIPTION
     );
@@ -40,6 +42,12 @@ class GroupServiceImplTest {
             VALID_GROUP_ID,
             VALID_GROUP_NAME,
             VALID_GROUP_DESCRIPTION
+    );
+
+    public final GroupEntity updatedGroupEntity = new GroupEntity(
+            VALID_GROUP_ID,
+            UPDATE_GROUP_NAME,
+            UPDATE_GROUP_DESCRIPTION
     );
 
     @BeforeEach
@@ -68,10 +76,22 @@ class GroupServiceImplTest {
     @Test
     public void whenCreateValidGroup_thenGroupCreated() {
         when(groupRepository.save(any())).thenReturn(validGroupEntity);
-        testValidGroupRequest(groupService.createGroup(validGroupRequest));
+        testValidGroupRequest(groupService.createGroup(validGroup));
     }
 
-    // TODO: Add test for update group.
+    @Test
+    public void whenUpdateValidGroup_thenGroupUpdated() {
+        when(groupRepository.findById(VALID_GROUP_ID)).thenReturn(Optional.of(validGroupEntity));
+        when(groupRepository.save(any())).thenReturn(updatedGroupEntity);
+
+        Group updateGroup = new Group(VALID_GROUP_ID, UPDATE_GROUP_NAME, UPDATE_GROUP_DESCRIPTION);
+
+        Group updatedGroup = groupService.updateGroup(updateGroup);
+
+        assertEquals(VALID_GROUP_ID, updatedGroup.getId());
+        assertEquals(UPDATE_GROUP_NAME, updatedGroup.getName());
+        assertEquals(UPDATE_GROUP_DESCRIPTION, updatedGroup.getDescription());
+    }
 
     private void testValidGroup(Group returnedGroup) {
         assertEquals(VALID_GROUP_ID, returnedGroup.getId());

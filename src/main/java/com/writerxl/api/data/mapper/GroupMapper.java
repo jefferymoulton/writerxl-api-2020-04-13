@@ -9,12 +9,12 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface GroupMapper {
 
-    GroupMapper MAPPER = Mappers.getMapper(GroupMapper.class);
+    GroupMapper MAP = Mappers.getMapper(GroupMapper.class);
 
     Group toModel(GroupEntity groupEntity);
 
     GroupEntity toEntity(Group group);
 
-    GroupEntity toRequestEntity(GroupRequest groupRequest);
+    //GroupEntity toRequestEntity(GroupRequest groupRequest);
 
 }

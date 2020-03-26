@@ -42,8 +42,8 @@ public class GroupController {
     @ApiImplicitParam(name = "group", value = "Group to be saved", paramType = "body", required = true)
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Group createGroup(@RequestBody @Valid GroupRequest groupRequest) {
-        return groupService.createGroup(groupRequest);
+    public Group createGroup(@RequestBody @Valid Group group) {
+        return groupService.createGroup(group);
     }
 
     @ApiOperation(value = "Update existing group.")

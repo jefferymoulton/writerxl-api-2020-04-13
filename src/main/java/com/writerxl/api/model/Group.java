@@ -15,8 +15,7 @@ import javax.validation.constraints.NotNull;
 public class Group {
 
     @ApiModelProperty
-    @NotNull
-    private int id;
+    private Integer id;
 
     @ApiModelProperty
     @NotNull
@@ -25,5 +24,10 @@ public class Group {
     @ApiModelProperty
     @NotNull
     private String description;
+
+    public Group(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
 }

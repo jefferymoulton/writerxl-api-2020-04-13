@@ -12,19 +12,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
-@Api(value = "/group")
 @RestController
 @RequestMapping(path = "/group")
 @AllArgsConstructor
 public class GroupController {
 
-    private GroupService groupService;
+    private final GroupService groupService;
 
-    @ApiOperation(value = "Retrieve a group by its ID")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Group found."),
-            @ApiResponse(code = 404, message = "Group was not found.")
-    })
     @GetMapping(path = "/{id}", produces = "application/json")
     public Group getGroupById(@ApiParam("Group Id") @PathVariable int id) {
         try {
@@ -35,23 +29,12 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "Create a new group.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Group created.")
-    })
-    @ApiImplicitParam(name = "group", value = "Group to be saved", paramType = "body", required = true)
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Group createGroup(@RequestBody @Valid GroupRequest groupRequest) {
         return groupService.createGroup(groupRequest);
     }
 
-    @ApiOperation(value = "Update existing group.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Group saved."),
-            @ApiResponse(code = 400, message = "Group with specified ID was not found.")
-    })
-    @ApiImplicitParam(name = "group", value = "Group to be saved", paramType = "body", required = true)
     @PutMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Group updateGroup(@RequestBody @Valid Group group) {
